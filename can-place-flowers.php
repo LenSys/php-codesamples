@@ -36,6 +36,10 @@ class Solution {
                 if(isset($flowerbed[$firstZeroIndex + 1]) && ($flowerbed[$firstZeroIndex + 1] === 0)) {
                     // plant a flower (set to 1)
                     $flowerbed[$firstZeroIndex + 1] = 1;
+
+                    // cut flowerbed at plant position 
+                    // -> (necessary to be able to find first zero again)
+                    $flowerbed = array_slice($flowerbed, $firstZeroIndex + 1);
             
                     $plantedFlowersCount++;
                 }
@@ -56,4 +60,8 @@ echo '---' . PHP_EOL;
 
 // Output: false
 echo var_export($solution->canPlaceFlowers([1,0,0,0,1], 2), true) . PHP_EOL;
+echo '---' . PHP_EOL;
+
+// Output: true
+echo var_export($solution->canPlaceFlowers([1,0,0,0,0,0,1], 2), true) . PHP_EOL;
 echo '---' . PHP_EOL;
