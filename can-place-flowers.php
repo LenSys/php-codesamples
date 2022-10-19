@@ -24,26 +24,50 @@ class Solution {
      */
     function canPlaceFlowers($flowerbed, $n) {
         
+        if($n === 0) {
+            return true;
+        }
         
         $plantedFlowersCount = 0;
-        for($i = 0; $i < $n; $i++) {
+        $l = count($flowerbed);
+        for($i = 0; $i < $l; $i++) {
             
-            // search for first zero
-            $firstZeroIndex = array_search(0, $flowerbed);
+            $element = $flowerbed[$i];
             
-            if($firstZeroIndex !== false) {
-                // check if next element after first zero is also zero
-                if(isset($flowerbed[$firstZeroIndex + 1]) && ($flowerbed[$firstZeroIndex + 1] === 0)) {
-                    // plant a flower (set to 1)
-                    $flowerbed[$firstZeroIndex + 1] = 1;
-
-                    // cut flowerbed at plant position 
-                    // -> (necessary to be able to find first zero again)
-                    $flowerbed = array_slice($flowerbed, $firstZeroIndex + 1);
-            
-                    $plantedFlowersCount++;
-                }
+            if($element === 1) {
+                // we can not plant a flower on this element here
+                // (-> a flower is already planted here)
+                continue;
             }
+            
+            // get previous element in flowerbed
+            $previousIndex = $i - 1;
+            if($previousIndex >= 0) {
+                $previousElement = $flowerbed[$previousIndex];
+            } else {
+                $previousElement = 0;
+            }
+            
+            // get next element in flowerbed
+            $nextIndex = $i + 1;
+            if($nextIndex < $l) {
+                $nextElement = $flowerbed[$nextIndex];
+            } else {
+                $nextElement = 0;
+            }
+            
+            if(($previousElement === 0) && ($nextElement === 0)) {
+                // we can plant because we have space before and after the current index
+                $flowerbed[$i] = 1;
+                
+                $plantedFlowersCount++;
+            }
+            
+            if($plantedFlowersCount === $n) {
+                // we have planted all required flowers
+                break;
+            }
+            
         }
         
         // echo var_export($flowerbed, true) . PHP_EOL;
@@ -64,4 +88,16 @@ echo '---' . PHP_EOL;
 
 // Output: true
 echo var_export($solution->canPlaceFlowers([1,0,0,0,0,0,1], 2), true) . PHP_EOL;
+echo '---' . PHP_EOL;
+
+// Output: false
+echo var_export($solution->canPlaceFlowers([1,0,0,0,0,1], 2), true) . PHP_EOL;
+echo '---' . PHP_EOL;
+
+// Output: true
+echo var_export($solution->canPlaceFlowers([0,0,1,0,1], 1), true) . PHP_EOL;
+echo '---' . PHP_EOL;
+
+// Output: true
+echo var_export($solution->canPlaceFlowers([0,0,0,0,0,1,0,0], 0), true) . PHP_EOL;
 echo '---' . PHP_EOL;
